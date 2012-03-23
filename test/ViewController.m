@@ -18,7 +18,8 @@
 @synthesize selectedButton;
 @synthesize selectedColor;
 @synthesize colorPickerButtons;
-@synthesize buttonLabelsDict;
+@synthesize buttonTagToColorLabelDict;
+@synthesize buttonColorLabelToUIColorDict;
 @synthesize popover;
 @synthesize popoverTimer;
 
@@ -41,7 +42,8 @@
     
     // Buttons.
     colorPickerButtons = [[NSMutableArray alloc] init];
-    buttonLabelsDict = [[NSMutableDictionary alloc] init];
+    buttonTagToColorLabelDict = [[NSMutableDictionary alloc] init];
+    buttonColorLabelToUIColorDict = [[NSMutableDictionary alloc] init];
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"colors" ofType:@"plist"];
     NSArray *colors = [[NSArray alloc] initWithContentsOfFile:path];
@@ -86,7 +88,8 @@
         [button addTarget:self action:@selector(selectButton:) forControlEvents:UIControlEventTouchUpInside];
         
         [colorPickerButtons addObject: button];
-        [buttonLabelsDict setValue:colorLabel forKey:[NSString stringWithFormat:@"%d", button.tag]];
+        [buttonTagToColorLabelDict setValue:colorLabel forKey:[NSString stringWithFormat:@"%d", button.tag]];
+        [buttonColorLabelToUIColorDict setValue:[self generateColor: button] forKey:colorLabel];
         
         // Add button to scroll view.
         [scrollView addSubview: button];
@@ -100,13 +103,13 @@
 - (void)selectButton:(id)sender {
     UIButton *button = (UIButton *)sender;
     
-    NSString *buttonLabel = [buttonLabelsDict valueForKey:[NSString stringWithFormat:@"%d", button.tag]];
+    NSString *buttonLabel = [buttonTagToColorLabelDict valueForKey:[NSString stringWithFormat:@"%d", button.tag]];
     
     // Select tapped button.
     [button setSelected: YES];
     
     // Set new color to paint with.
-    selectedColor = [self getColor: buttonLabel];
+    selectedColor = [buttonColorLabelToUIColorDict valueForKey: buttonLabel];
     [self testColor];
     
     // Dismiss currently visible popover if any.
@@ -156,9 +159,33 @@
     [popover dismissPopoverAnimated: YES];
 }
 
-- (UIColor *)getColor: (NSString *)colorLabel {
-    // TODO: create mapping table that has color labels as keys and custom UIColor objects as values
-    return [UIColor redColor];
+- (UIColor *)generateColor: (UIButton *)button {
+    UIImage *image = button.currentBackgroundImage;
+    
+    CGImageRef imageRef = [image CGImage];
+    NSUInteger width = CGImageGetWidth(imageRef);
+    NSUInteger height = CGImageGetHeight(imageRef);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    unsigned char *rawData = (unsigned char*) calloc(height * width * 4, sizeof(unsigned char));
+    NSUInteger bytesPerPixel = 4;
+    NSUInteger bytesPerRow = bytesPerPixel * width;
+    NSUInteger bitsPerComponent = 8;
+    CGContextRef context = CGBitmapContextCreate(rawData, width, height,
+                                                 bitsPerComponent, bytesPerRow, colorSpace,
+                                                 kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
+    
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
+    CGContextRelease(context);
+    
+    // Now your rawData contains the image data in the RGBA8888 pixel format.
+    int byteIndex = (bytesPerRow * 0) + 0 * bytesPerPixel;
+    
+    CGFloat red   = (rawData[byteIndex]     * 1.0) / 255.0;
+    CGFloat green = (rawData[byteIndex + 1] * 1.0) / 255.0;
+    CGFloat blue  = (rawData[byteIndex + 2] * 1.0) / 255.0;
+    CGFloat alpha = (rawData[byteIndex + 3] * 1.0) / 255.0;
+    return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
 - (void)testColor {
@@ -171,7 +198,8 @@
     selectedButton = nil;
     selectedColor = nil;
     colorPickerButtons = nil;
-    buttonLabelsDict = nil;
+    buttonTagToColorLabelDict = nil;
+    buttonColorLabelToUIColorDict = nil;
     popover = nil;
     popoverTimer = nil;
     [super viewDidUnload];

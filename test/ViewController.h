@@ -15,7 +15,8 @@
 @property (nonatomic, retain) UIButton *selectedButton;
 @property (nonatomic, retain) UIColor *selectedColor;
 @property (nonatomic, retain) NSMutableArray *colorPickerButtons;
-@property (nonatomic, retain) NSMutableDictionary *buttonLabelsDict;
+@property (nonatomic, retain) NSMutableDictionary *buttonTagToColorLabelDict;
+@property (nonatomic, retain) NSMutableDictionary *buttonColorLabelToUIColorDict;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) NSTimer *popoverTimer;
 
