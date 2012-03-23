@@ -16,9 +16,11 @@
 
 @synthesize scrollView;
 @synthesize selectedButton;
+@synthesize selectedColor;
 @synthesize colorPickerButtons;
 @synthesize buttonLabelsDict;
 @synthesize popover;
+@synthesize popoverTimer;
 
 - (void)viewDidLoad
 {
@@ -91,46 +93,87 @@
         
         i++;
     }
-
+    
     [self.view addSubview: scrollView];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    for (UIButton *button in colorPickerButtons) {
-        UITableViewController *tvc = [[UITableViewController alloc] init];
-        tvc.title = [buttonLabelsDict valueForKey:[NSString stringWithFormat:@"%d", button.tag]];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:tvc];
-        
-        popover = [[UIPopoverController alloc] initWithContentViewController:nav];
-        popover.popoverLayoutMargins = UIEdgeInsetsMake(0.0, 1.0, 0.0, 1.0);
-        popover.popoverContentSize = CGSizeMake(self.view.bounds.size.width, 35);
-        [popover presentPopoverFromRect:button.frame inView:button permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
-        break;
-    }
 }
 
 - (void)selectButton:(id)sender {
     UIButton *button = (UIButton *)sender;
     
+    NSString *buttonLabel = [buttonLabelsDict valueForKey:[NSString stringWithFormat:@"%d", button.tag]];
+    
     // Select tapped button.
     [button setSelected: YES];
+    
+    // Set new color to paint with.
+    selectedColor = [self getColor: buttonLabel];
+    [self testColor];
+    
+    // Dismiss currently visible popover if any.
+    [popoverTimer invalidate];
+    popoverTimer = nil;
+    [popover dismissPopoverAnimated: NO];
     
     // Deselect currently selected button, if any.
     if (selectedButton != nil && selectedButton != button) {
         [selectedButton setSelected: NO];
     }
     
+    // Show popover.
+    NSString *title = buttonLabel;
+    
+    UITableViewController *tvc = [[UITableViewController alloc] init];
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:tvc];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont systemFontOfSize:35.0];
+    titleLabel.textColor = [UIColor whiteColor];
+    titleLabel.text = title;
+    titleLabel.textAlignment = UITextAlignmentLeft;
+    [titleLabel sizeToFit];
+    tvc.navigationItem.titleView = titleLabel;
+    
+    popover = [[UIPopoverController alloc] initWithContentViewController:nav];
+    popover.popoverLayoutMargins = UIEdgeInsetsMake(0.0, 1.0, 0.0, 1.0);
+    popover.popoverContentSize = CGSizeMake(self.view.bounds.size.width, 35);
+    popover.passthroughViews = [[NSArray alloc] initWithObjects:self.view, nil];
+    [popover presentPopoverFromRect:button.bounds inView:button permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
+    
+    // Dismiss popover after a delay.
+    popoverTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
+                                     target:self
+                                   selector:@selector(dismissPopover)
+                                   userInfo:nil
+                                    repeats:NO];
+    
     // Set this as selected button.
     selectedButton = button;
+}
+
+- (void)dismissPopover {
+    [popover dismissPopoverAnimated: YES];
+}
+
+- (UIColor *)getColor: (NSString *)colorLabel {
+    // TODO: create mapping table that has color labels as keys and custom UIColor objects as values
+    return [UIColor redColor];
+}
+
+- (void)testColor {
+    self.view.backgroundColor = selectedColor;
 }
 
 - (void)viewDidUnload
 {
     scrollView = nil;
     selectedButton = nil;
+    selectedColor = nil;
     colorPickerButtons = nil;
     buttonLabelsDict = nil;
     popover = nil;
+    popoverTimer = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
