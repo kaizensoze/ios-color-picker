@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+  <dict>
+    <key>Red</key>
+    <string>red.png</string>
+  </dict>
+  <dict>
+    <key>Orange</key>
+    <string>orange.png</string>
+  </dict>
+  <dict>
+    <key>Yellow</key>
+    <string>yellow.png</string>
+  </dict>
+  <dict>
+    <key>Green</key>
+    <string>green.png</string>
+  </dict>
+  <dict>
+    <key>Blue</key>
+    <string>blue.png</string>
+  </dict>
+  <dict>
+    <key>Purple</key>
+    <string>purple.png</string>
+  </dict>
+  <dict>
+    <key>Rose</key>
+    <string>rose.png</string>
+  </dict>
+  <dict>
+    <key>Light Orange</key>
+    <string>light_orange.png</string>
+  </dict>
+  <dict>
+    <key>Light Yellow</key>
+    <string>light_yellow.png</string>
+  </dict>
+  <dict>
+    <key>Light Green</key>
+    <string>light_green.png</string>
+  </dict>
+  <dict>
+    <key>Turquoise</key>
+    <string>turquoise.png</string>
+  </dict>
+  <dict>
+    <key>Light Blue</key>
+    <string>light_blue.png</string>
+  </dict>
+  <dict>
+    <key>Lilac</key>
+    <string>lilac.png</string>
+  </dict>
+  <dict>
+    <key>Pink</key>
+    <string>pink.png</string>
+  </dict>
+  <dict>
+    <key>Dark Red</key>
+    <string>dark_red.png</string>
+  </dict>
+  <dict>
+    <key>Dark Orange</key>
+    <string>dark_orange.png</string>
+  </dict>
+  <dict>
+    <key>Dark Yellow</key>
+    <string>dark_yellow.png</string>
+  </dict>
+  <dict>
+    <key>Dark Green</key>
+    <string>dark_green.png</string>
+  </dict>
+  <dict>
+    <key>Dark Blue</key>
+    <string>dark_blue.png</string>
+  </dict>
+  <dict>
+    <key>Dark Purple</key>
+    <string>dark_purple.png</string>
+  </dict>
+  <dict>
+    <key>Magenta</key>
+    <string>magenta.png</string>
+  </dict>
+  <dict>
+    <key>Tangerine</key>
+    <string>tangerine.png</string>
+  </dict>
+  <dict>
+    <key>Lime Green</key>
+    <string>lime_green.png</string>
+  </dict>
+  <dict>
+    <key>Olive</key>
+    <string>olive.png</string>
+  </dict>
+  <dict>
+    <key>Brown</key>
+    <string>brown.png</string>
+  </dict>
+  <dict>
+    <key>Beige</key>
+    <string>beige.png</string>
+  </dict>
+  <dict>
+    <key>White</key>
+    <string>white.png</string>
+  </dict>
+  <dict>
+    <key>Light Gray</key>
+    <string>light_gray.png</string>
+  </dict>
+  <dict>
+    <key>Dark Gray</key>
+    <string>dark_gray.png</string>
+  </dict>
+  <dict>
+    <key>Black</key>
+    <string>black.png</string>
+  </dict>
+</array>
+</plist>
